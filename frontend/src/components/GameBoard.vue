@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 import Gameboard, { CellValue, Direction } from './GameBoard'
 import { socket, state } from '../socket';
 
@@ -39,6 +39,10 @@ onMounted(() => {
     })
   }
 })
+
+watch(() => state.attacked, (arg) => {
+  if (myBoard) gb.receiveAttack(arg.coordinate, arg.attackResult);
+});
 
 function onCellClick({ x, y }: Coordinate) {
   if (!gameOver.value) {
@@ -96,7 +100,7 @@ function setMouseOnBoard(onBoard: boolean) {
   <table class="board" :class="{ myBoard, opponentBoard, gameActive: !gameOver }" @mouseover="setMouseOnBoard(true)"
     @mouseleave="setMouseOnBoard(false)">
     <tr v-for="(row, y) in gb.board.value" :key="y">
-      <td class="table-success" v-for="(col, x) in row" :key="x">
+      <td v-for="(col, x) in row" :key="x">
         <div :class="{
           hovered: gb.board.value[y][x] === CellValue.HOVER,
           ship: gb.board.value[y][x] === CellValue.SHIP,
@@ -134,6 +138,7 @@ td {
 
 .cell {
   aspect-ratio: 1 / 1;
+  height: 40px;
   font-size: 20px;
   display: flex;
   justify-content: center;
@@ -156,11 +161,31 @@ td {
   background-color: red;
 }
 
-.hit {
-  background-color: green;
+.opponentBoard .hit::before {
+  content: "X";
 }
 
-.miss {
-  background-color: rebeccapurple;
+.opponentBoard .miss::before {
+  content: "•";
+}
+
+.myBoard .hit::before {
+  content: "X";
+}
+
+.myBoard .hit {
+  background-color: red;
+}
+
+.myBoard .miss::before {
+  content: "•";
+}
+
+.opponentHit {
+  background-color: grey;
+}
+
+.opponentMiss {
+  background-color: orange;
 }
 </style>y

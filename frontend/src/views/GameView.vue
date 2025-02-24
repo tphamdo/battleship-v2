@@ -26,8 +26,15 @@ watch(() => state.opponentDisconnected, (disconnected) => {
       <GameBoard :my-board="true" />
       <GameBoard :opponent-board="true" />
     </div>
-    <p>Game Started: {{ gameStarted }}</p>
-    <p>Game Over: {{ gameOver }}</p>
+    <div class="text">
+      <div v-if="gameOver">
+        Game Over!
+      </div>
+      <div v-else>
+        <p v-if="gameStarted">Attack your opponents ships!</p>
+        <p v-else>Place ships on your battleground!</p>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -35,8 +42,12 @@ watch(() => state.opponentDisconnected, (disconnected) => {
 .boards {
   display: flex;
   justify-content: space-around;
-  border: 1px solid red;
   flex-wrap: wrap;
   gap: 20px;
+}
+
+.text {
+  margin-top: 50px;
+  text-align: center;
 }
 </style>

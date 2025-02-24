@@ -73,6 +73,14 @@ class Gameboard {
     });
   }
 
+  public receiveAttack({ x, y }: Coordinate, attackResult: string) {
+    if (attackResult === 'Hit') {
+      this.board.value[y][x] = CellValue.HIT;
+    } else if (attackResult === 'Miss') {
+      this.board.value[y][x] = CellValue.MISS;
+    }
+  }
+
   public isValidPlacement(placement: Placement): boolean {
     const { start, shipLength, direction } = placement
 

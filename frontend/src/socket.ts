@@ -8,6 +8,7 @@ export const state = reactive({
   opponentDisconnected: false,
   gameStarted: false,
   gameOver: false,
+  attacked: { attacked: false, coordinate: null, attackResult: null }
 });
 
 function resetState() {
@@ -34,9 +35,8 @@ socket.on('all done placing', () => {
 })
 
 socket.on('received attack', (coordinate, attackResult) => {
-  console.log('received attack');
-  console.log(coordinate);
-  console.log(attackResult);
+  console.log('received attack', coordinate, attackResult);
+  state.attacked = { attacked: true, coordinate, attackResult };
 })
 
 socket.on('game over', () => {
